@@ -16,12 +16,12 @@ import diemdanh.util.WorkbookUtil;
 
 public class CheckInApp {
 
-    public static void main(String[] args) {
+    public static void main2(String[] args) {
         String url = "jdbc:mysql://localhost:3306/diemdanh";
         String username = "root";
         String password = "1234567890";
 
-        LocalDateTime now = LocalDateTime.now().minusDays(5);
+        LocalDateTime now = LocalDateTime.now().minusDays(1);
 
         try (Connection connection = DriverManager.getConnection(url, username, password);
              Statement statement = connection.createStatement()) {
@@ -31,6 +31,31 @@ public class CheckInApp {
             Workbook workbook = WorkbookUtil.createDailyReportWorkbook(now, students, statement);
 
             String formattedDateTime = TimeUtil.formatLocalDateTime(now, "dd-MM-yyyy");
+            try (FileOutputStream fileOut = new FileOutputStream(formattedDateTime + ".xlsx")) {
+                workbook.write(fileOut);
+            }
+
+            System.out.println("==============================Đã xong==============================");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void main(String[] args) {
+        String url = "jdbc:mysql://localhost:3306/diemdanh";
+        String username = "root";
+        String password = "1234567890";
+
+        LocalDateTime now = LocalDateTime.now().minusDays(1);
+
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             Statement statement = connection.createStatement()) {
+
+            List<Student> students = DataAccess.getAllStudent(statement);
+
+            Workbook workbook = WorkbookUtil.createMonthlyReportWorkbook(now, students, statement);
+
+            String formattedDateTime = TimeUtil.formatLocalDateTime(now, "MM-yyyy");
             try (FileOutputStream fileOut = new FileOutputStream(formattedDateTime + ".xlsx")) {
                 workbook.write(fileOut);
             }

@@ -29,7 +29,7 @@ public final class DataAccess {
 			checkIn.setTime(null);
 		}
 
-		System.out.println(checkIn.getType());
+		System.out.println(studentId + "" + checkIn.getType());
 		
 		return checkIn;
 	}
